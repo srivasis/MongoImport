@@ -5,49 +5,58 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
-import com.mongodb.WriteConcern;
 
 public class Main {
 
 	@SuppressWarnings({ "deprecation" })
 	public static void main(String args[]) {
 
-		FilePaths fps = new FilePaths("\\\\TLPFILER\\sharpregr\\GAMIFI-SHARE\\DAT\\V01\\ONEJIRA",
-				"C:\\MongoImport\\gamification\\MongoDBSetup\\src\\ReadFiles.txt");
+		if (args.length != 5) {
+			System.out.println(
+					"Incorrect arguments passed.\nArguments should be:\n1. Path to OneJira folder\n2. Path to the file containing start date\n3. IP address for the MongoDB\n4. Port number for MongoDB\n5. Database name");
+			return;
+		}
+
+		String dir = args[0];
+		String dateFile = args[1];
+		String ip = args[2];
+		int port = Integer.parseInt(args[3]);
+		String dbName = args[4];
+		
+		System.out.println(
+				"Arguments passed ->\n1. Path to OneJira folder: "+ dir +"\n2. Path to the file containing start date: "+ dateFile +"\n3. IP address for the MongoDB: "+ ip +"\n4. Port number for MongoDB: "+ port +"\n5. Database name: "+ dbName);
+
+		FilePaths fps = new FilePaths(dir, dateFile);
+
 		// filePaths -> Holds paths to all json files that need to be pulled into
 		// MongoDB
+
 		ArrayList<String> filePaths = fps.getFilePaths();
-		HashMap<String, ArrayList<DBObject>> collectionToEntries = new HashMap<>();
 
 		try {
-			Mongo mongo = new Mongo("127.0.0.1", 27017);
-			DB db = mongo.getDB("onejira");
+			Mongo mongo = new Mongo(ip, port);
+			DB db = mongo.getDB(dbName);
 
 			for (String filePath : filePaths) {
 				String[] pathContents = filePath.split("\\\\");
 				String projectID = pathContents[9];
-				if (!collectionToEntries.containsKey(projectID)) {
-					collectionToEntries.put(projectID, new ArrayList<>());
+
+				System.out.println(filePath);
+
+				DBCollection collection = db.getCollection(projectID);
+
+				try {
+					collection.insert((DBObject) JSON.parse(readFile(filePath)));
+				} catch (Exception e) {
+					System.out.println("Bad File Encountered -> " + filePath);
 				}
-				System.out.println(JSON.parse(readFile(filePath)));
-				ArrayList<DBObject> listOfEntries = collectionToEntries.get(projectID);
-				listOfEntries.add((DBObject) JSON.parse(readFile(filePath)));
-				collectionToEntries.put(projectID, listOfEntries);
-				
 			}
 
-			for (String projectID : collectionToEntries.keySet()) {
-				DBCollection collection = db.getCollection(projectID);
-				collection.insert(collectionToEntries.get(projectID), WriteConcern.NORMAL);
-			}
-			
 		} catch (Exception e) {
 			System.out.println("Cannot insert into db");
 			e.printStackTrace();

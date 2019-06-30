@@ -13,8 +13,11 @@ public class FilePaths {
 	private ArrayList<String> filePaths;
 
 	public FilePaths(String firstLevelPath, String localDataPath) {
+		long start = System.currentTimeMillis();
+		System.out.println("\nBuilding Filepaths --------------------------------");
 		this.filePaths = new ArrayList<>();
 		buildFilePaths(firstLevelPath, localDataPath);
+		System.out.println("Done Building Filepaths -------------- Time: " + (System.currentTimeMillis() - start));
 	}
 
 	public void buildFilePaths(String firstLevelPath, String localDataPath) {
@@ -63,6 +66,9 @@ public class FilePaths {
 	}
 
 	public void recurse(String firstLevelPath, String firstLevelFile) {
+		
+		System.out.println("Got to recursion ---- " + firstLevelPath + " \\" + firstLevelFile);
+		
 		// Second Level -> Date Onwards
 		String secondLevelPath = firstLevelPath + "\\" + firstLevelFile;
 		File secondLevelFolder = new File(secondLevelPath);
@@ -75,7 +81,7 @@ public class FilePaths {
 			File thirdLevelFolder = new File(thirdLevelPath);
 			String[] jsonFiles = thirdLevelFolder.list();
 			for (String thirdLevelFile : jsonFiles) {
-
+				
 				// Fourth Level -> JSON file
 				this.filePaths.add(thirdLevelPath + "\\" + thirdLevelFile);
 			}
