@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    h3.
+        Velocity for Team #{teamName}
+    ul
+        - for (var i = 0; i < sprints.length; i++){
+          li Sprint: #{sprints[i]}
+          ul
+            li Committed Velocity: #{committedVelocities[i]} 
+            li Completed Velocity: #{completedVelocities[i]}
+        - }
+    br
+    br
+    br
+    ul
+        li Average Committed Velocity For Past Three Sprints: #{avgCommitThreeSprints}
+        li Average Completed Velocity For Past Three Sprints: #{avgCompleteThreeSprints}
+        li Average Committed Velocity Overall: #{avgCommit}
+        li Average Completed Velocity Overall: #{avgComplete}

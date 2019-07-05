@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h3.
+        #{title}
+    ul
+        each entry, i in dataList
+            li#team_data_item
+                #{entry._id}

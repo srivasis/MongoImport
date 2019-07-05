@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h2.
+        #{title}
+    ul
+        each entry, i in teamMembers
+            li
+                h4 #{entry._id} ( #{entry.email} )

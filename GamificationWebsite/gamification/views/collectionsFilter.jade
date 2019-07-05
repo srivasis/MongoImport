@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    h3.
+        Team Data
+	
+    ul
+        each collection, i in teamEntries
+           li#collection_list_item
+              a(id="#")(href="http://localhost:3000/collectionData?"+ collection.name) #{collection.name}
+
+    br
+    br
+    button(onclick='teamroster()') Team Roster
+    br
+    br
+    button(onclick='teamVelocities()') Team Velocities
+
+    script.
+
+        function teamroster(){
+            window.location.href = 'http://localhost:3000/teamRoster?'+ "#{teamName}";
+        }
+        function teamVelocities(){
+            window.location.href = 'http://localhost:3000/velocity?' + "#{teamName}";
+        }

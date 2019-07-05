@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h3.
+  img(id='TransamericaLogo' src='/images/Transamerica-Logo.png')
+  p Welcome to #{title}'s OneJira Gamification
+  br
+  br
+  button(onclick='goTeams()') Teams
+
+  script.
+   
+   function goTeams(){
+    window.location.href = '/collections'
+    }

@@ -1,0 +1,9 @@
+extends layout
+
+block content
+	h3.
+		Teams
+	ul
+		each collection, i in teamList
+			li#collection_list_item
+				a(id="#")(href="http://localhost:3000/collectionFilter?"+ collection.name) #{collection.name}

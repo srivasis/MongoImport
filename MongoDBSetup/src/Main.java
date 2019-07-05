@@ -45,9 +45,14 @@ public class Main {
 			for (String filePath : filePaths) {
 				String[] pathContents = filePath.split("\\\\");
 				String projectID = pathContents[9];
+				String fileName = pathContents[10];
+				
+				if(fileName.split("-")[2].equals("userstory")) {
+					projectID+="Userstory";
+				}
 
 				System.out.println(filePath);
-
+				
 				DBCollection collection = db.getCollection(projectID);
 
 				try {
